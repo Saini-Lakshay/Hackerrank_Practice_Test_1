@@ -1,0 +1,116 @@
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <limits.h>
+#include <stdbool.h>
+
+struct list
+{
+    int data;
+    struct list* next;
+};
+
+void insert(struct list** head, int d)
+{
+    struct list* node = (struct list*)malloc(sizeof(struct list));
+    node->data = d;
+    node->next = *head;
+    *head = node;
+}
+
+
+int main() {
+    struct list* h1 = NULL;
+    struct list* h2 = NULL;
+    struct list* h3 = NULL;
+    struct list* p2 = NULL;
+    struct list* curr = NULL;
+    struct list* prev = NULL;
+    struct list* p1 = NULL;
+
+    int i=0,n=0;
+    for(i=0;i<3;i++)
+    {
+        scanf("%d",&n);
+        insert(&h1,n);
+    }
+    for(i=0;i<3;i++)
+    {
+        scanf("%d",&n);
+        insert(&h2,n);
+    }
+
+    prev=h1;
+    curr=prev->next;
+    while(curr)
+    {
+        prev->next=curr->next;
+        curr->next=h1;
+        h1=curr;
+        curr=prev->next;
+    }
+    
+    prev=h2;
+    curr=prev->next;
+    while(curr)
+    {
+        prev->next=curr->next;
+        curr->next=h2;
+        h2=curr;
+        curr=prev->next;
+    }
+
+    p1=h1;
+    p2=h2;
+    while(p1 || p2)
+    {
+        if(p1 && p2)
+        {
+            if(p1->data < p2->data)
+            {
+                insert(&h3,p1->data);
+                p1=p1->next;
+            }
+            else if(p2->data < p1->data)
+            {
+                insert(&h3,p2->data);
+                p2=p2->next;
+            }
+            else
+            {
+                insert(&h3,p1->data);
+                insert(&h3,p2->data);
+                p1=p1->next;
+                p2=p2->next;
+            }
+        }
+        else if(!p1 && p2)
+        {
+            while(p2)
+            {
+                insert(&h3,p2->data);
+                p2=p2->next;
+            }
+        }
+        else if(!p2 && p1)
+        {
+            while(p1)
+            {
+                insert(&h3,p1->data);
+                p1=p1->next;
+            }
+        }
+    }
+
+    curr=h3;
+    while(curr)
+    {
+        printf("%d ",curr->data);
+        curr=curr->next;
+    }
+
+    return 0;
+}
+
